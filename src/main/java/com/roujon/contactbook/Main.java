@@ -22,84 +22,74 @@ public class Main {
 
         Scanner scanner = new Scanner(System.in);
 
-        // Establish connection to the database
-        try(Connection conn = DriverManager.getConnection(DB_URL)) {
-            System.out.println("Connected to database successfully!");
+        Boolean running = true;
 
-            Boolean running = true;
+        while(running){
 
-            while(running){
+            System.out.println("\nContact Book\n");
+            System.out.println("1. Add contact");
+            System.out.println("2. Show contacts");
+            System.out.println("3. Search contact");
+            System.out.println("4. Exit");
+            System.out.println("Enter your choice: ");
 
-                System.out.println("\nContact Book\n");
-                System.out.println("1. Add contact");
-                System.out.println("2. Show contacts");
-                System.out.println("3. Search contact");
-                System.out.println("4. Exit");
-                System.out.println("Enter your choice: ");
+            // Read user input
+            int choice = scanner.nextInt();
+            scanner.nextLine();
 
-                // Read user input
-                int choice = scanner.nextInt();
-                scanner.nextLine();
+            switch(choice){
+                case 1:
+                    // Getting contact info
+                    System.out.println("\nAdd Contact");
+                    System.out.print("Enter first name: ");
+                    String firstName = scanner.nextLine();
+            
+                    System.out.print("Enter last name: ");
+                    String lastName = scanner.nextLine();
+            
+                    System.out.print("Enter email: ");
+                    String email = scanner.nextLine();
+            
+                    System.out.print("Enter phone number: ");
+                    String phone = scanner.nextLine();
 
-                switch(choice){
-                    case 1:
-                        // Getting contact info
-                        System.out.println("\nAdd Contact");
-                        System.out.print("Enter first name: ");
-                        String firstName = scanner.nextLine();
+                    // Create contact object
+                    Contact contact = new Contact(firstName, lastName, email, phone);
+
+                    // Add contact to database
+                    addContact(contact);
+                    break;
+
+                case 2:
+                    // Show contacts
+                    System.out.println("\nContact List\n");
+                    showContacts();
+                    break;
                 
-                        System.out.print("Enter last name: ");
-                        String lastName = scanner.nextLine();
-                
-                        System.out.print("Enter email: ");
-                        String email = scanner.nextLine();
-                
-                        System.out.print("Enter phone number: ");
-                        String phone = scanner.nextLine();
+                case 3:
+                    // Search contact
+                    System.out.println("\nSearch Contact\n");
+                    System.out.print("Enter first name: ");
+                    String searchFirstName = scanner.nextLine();
 
-                        // Create contact object
-                        Contact contact = new Contact(firstName, lastName, email, phone);
+                    Contact searchContact = searchContact(searchFirstName);
 
-                        // Add contact to database
-                        addContact(contact);
-                        break;
+                    if(searchContact != null){
+                        System.out.println("\nResults\n");
+                        System.out.println(searchContact);
+                    } else {
+                        System.out.println("\nContact not found\n");
+                    }
+                    break;
 
-                    case 2:
-                        // Show contacts
-                        System.out.println("\nContact List\n");
-                        showContacts();
-                        break;
-                    
-                    case 3:
-                        // Search contact
-                        System.out.println("\nSearch Contact\n");
-                        System.out.print("Enter first name: ");
-                        String searchFirstName = scanner.nextLine();
-
-                        Contact searchContact = searchContact(searchFirstName);
-
-                        if(searchContact != null){
-                            System.out.println("\nResults\n");
-                            System.out.println(searchContact);
-                        } else {
-                            System.out.println("\nContact not found\n");
-                        }
-                        break;
-
-                    case 4:
-                        // Exit
-                        running = false;
-                        break;
-                    default:
-                        System.out.println("Invalid choice");
-                }
-
+                case 4:
+                    // Exit
+                    running = false;
+                    break;
+                default:
+                    System.out.println("Invalid choice");
             }
 
-        
-        } catch (SQLException e) {
-            System.err.println("Failed to connect to database");
-            System.out.println(e.getMessage());
         }
 
         scanner.close();
@@ -121,7 +111,7 @@ public class Main {
     // Create database func
     private static void createDatabase() {
         // Create the database
-        try(Connection conn = DriverManager.getConnection(DB_URL)) {
+        try(Connection conn = connect()) {
             Statement stmt = conn.createStatement();
 
             // Create the table, defining the schema
@@ -146,7 +136,7 @@ public class Main {
     // Add contact
     public static void addContact(Contact contact) {
         // Establish connection to the database
-        try(Connection conn = DriverManager.getConnection(DB_URL)) {
+        try(Connection conn = connect()) {
             Statement stmt = conn.createStatement();
 
             // Insert the contact into the database
@@ -169,7 +159,7 @@ public class Main {
     // Show contacts
     public static void showContacts() {
         // Establish connection to the database
-        try(Connection conn = DriverManager.getConnection(DB_URL)) {
+        try(Connection conn = connect()) {
             Statement stmt = conn.createStatement();
 
             // Select all contacts from the database
@@ -192,7 +182,7 @@ public class Main {
     // Search contact
     public static Contact searchContact(String firstName) {
         // Establish connection to the database
-        try(Connection conn = DriverManager.getConnection(DB_URL)) {
+        try(Connection conn = connect()) {
             Statement stmt = conn.createStatement();
 
             // Select contact from the database
@@ -211,5 +201,18 @@ public class Main {
             System.out.println(e.getMessage());
         }
         return null;
+    }
+
+
+    // Database connection
+    private static Connection connect() {
+        Connection conn = null;
+        try {
+            conn = DriverManager.getConnection(DB_URL);
+        } catch (SQLException e) {
+            System.err.println("Failed to connect to database");
+            System.out.println(e.getMessage());
+        }
+        return conn;
     }
 }
