@@ -12,7 +12,7 @@ import java.util.Scanner;
 public class Main {
 
     // Database connection param
-    private static final String DB_URL = "jdbc:sqlite:src/main/resources/data/contact_book.db";
+    private static final String DB_URL = "jdbc:sqlite:src/main/resources/data/contact_manager.db";
 
     public static void main(String[] args) {
         // Database initialization
