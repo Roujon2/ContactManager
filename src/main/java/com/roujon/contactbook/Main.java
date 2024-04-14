@@ -9,8 +9,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Scanner;
 
-
-
 public class Main {
 
     // Database connection param
@@ -30,7 +28,8 @@ public class Main {
             System.out.println("1. Add contact");
             System.out.println("2. Show contacts");
             System.out.println("3. Search contact");
-            System.out.println("4. Exit");
+            System.out.println("4. Delete contact");
+            System.out.println("5. Exit");
             System.out.println("Enter your choice: ");
 
             // Read user input
@@ -83,6 +82,31 @@ public class Main {
                     break;
 
                 case 4:
+                    // Delete contact
+                    System.out.println("\nDelete Contact\n");
+                    System.out.print("Enter first name: ");
+                    String deleteFirstName = scanner.nextLine();
+
+                    Contact deleteContact = searchContact(deleteFirstName);
+
+                    if(deleteContact != null){
+                        // Confirmation
+                        System.out.println("\nResults\n");
+                        System.out.println(deleteContact);
+                        System.out.print("Are you sure you want to delete this contact? (y/n): ");
+                        String confirm = scanner.nextLine();
+
+                        if(confirm.equals("y")){
+                            deleteContact(deleteContact);
+                        } else {
+                            System.out.println("\nOperation Cancelled\n");
+                        }
+                    } else {
+                        System.out.println("\nContact not found\n");
+                    }
+
+                    break;
+                case 5:
                     // Exit
                     running = false;
                     break;
@@ -201,6 +225,25 @@ public class Main {
             System.out.println(e.getMessage());
         }
         return null;
+    }
+
+    // Delete contact
+    public static void deleteContact(Contact contact) {
+        // Establish connection to the database
+        try(Connection conn = connect()) {
+            Statement stmt = conn.createStatement();
+
+            // Delete contact from the database
+            String deleteSql = "DELETE FROM contacts WHERE first_name = '" + contact.getFirstName() + "';";
+
+            stmt.executeUpdate(deleteSql);
+
+            System.out.println("Contact deleted successfully!");
+
+        } catch (SQLException e) {
+            System.err.println("Failed to delete contact");
+            System.out.println(e.getMessage());
+        }
     }
 
 
