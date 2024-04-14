@@ -10,7 +10,7 @@ import java.sql.Statement;
 import java.util.Scanner;
 
 public class Main {
-
+    
     // Database connection param
     private static final String DB_URL = "jdbc:sqlite:src/main/resources/data/contact_manager.db";
 
