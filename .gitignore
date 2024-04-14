@@ -3,5 +3,3 @@ target/
 .vscode/
 
 *.iml
-
-src/main/resources/data/
