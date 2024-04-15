@@ -4,17 +4,6 @@ users can register and login to their account, add contacts, view contacts, and 
 The application uses SQLite to store the contact information and follows ACID principles to ensure
 data integrity and reliability.
 
-## How to Run
-1. Clone the repository
-```
-git clone https://github.com/roujon2/ContactManager.git
-```
-2. Compile the Java files
-3. Run the application
-```
-java Main
-```
-
 ## Technologies Used
 - Java
 - SQLite
