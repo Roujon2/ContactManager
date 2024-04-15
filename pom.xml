@@ -41,6 +41,7 @@
                 <version>3.3.0</version>
                 <executions>
                     <execution>
+                        <id>make-my-jar-with-dependencies</id>
                         <phase>package</phase>
                         <goals>
                             <goal>single</goal>
@@ -48,7 +49,7 @@
                         <configuration>
                             <archive>
                                 <manifest>
-                                    <mainClass>com.roujon.addressbook.Main</mainClass>
+                                    <mainClass>com.roujon.contactbook.Main</mainClass>
                                 </manifest>
                             </archive>
                             <descriptorRefs>
