@@ -1,5 +1,6 @@
 package com.roujon.contactbook;
 
+import java.util.List;
 // Imports 
 import java.util.Scanner;
 
@@ -129,7 +130,16 @@ public class Main {
                 case 2:
                     // Show contacts
                     System.out.println("\nContact List\n");
-                    //showContacts();
+                    List<Contact> contacts = db.showContacts(user);
+
+                    if(contacts.size() > 0){
+                        for(Contact c : contacts){
+                            System.out.println(c);
+                        }
+                    } else {
+                        System.out.println("No contacts found");
+                    }
+                    
                     break;
                 
                 case 3:

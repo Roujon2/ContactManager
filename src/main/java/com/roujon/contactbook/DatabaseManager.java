@@ -3,8 +3,11 @@ package com.roujon.contactbook;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DatabaseManager {
 
@@ -86,6 +89,37 @@ public class DatabaseManager {
             System.out.println(e.getMessage());
         }
     }
+    // Show contacts
+    public List<Contact> showContacts(User user) {
+        List<Contact> contacts = new ArrayList<>();
+        try {
+            Statement stmt = connection.createStatement();
+
+            // Query the database for the contacts
+            String querySql = "SELECT * FROM contacts WHERE user_id = " + user.getId() + ";";
+
+            // Get result
+            ResultSet result = stmt.executeQuery(querySql);
+
+            // Loop through the result and create contact objects
+            while(result.next()){
+                Contact contact = new Contact(
+                    result.getString("first_name"),
+                    result.getString("last_name"),
+                    result.getString("email"),
+                    result.getString("phone"),
+                    user.getId()
+                );
+                contacts.add(contact);
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Failed to show contacts");
+            System.out.println(e.getMessage());
+        }
+
+        return contacts;
+    }
 
 
     // User table features
@@ -98,11 +132,17 @@ public class DatabaseManager {
             // Query the database for the user
             String querySql = "SELECT * FROM users WHERE username = '" + username + "' AND password = '" + password + "';";
 
+            ResultSet result = stmt.executeQuery(querySql);
+            // Check if the user exists
+            if (!result.next()) {
+                return null;
+            }
+
             user = new User(username, password);
-            user.setId(stmt.executeQuery(querySql).getInt("id"));
+            user.setId(result.getInt("id"));
 
         } catch (SQLException e) {
-            System.err.println("Failed to login. Invalid credentials.");
+            System.err.println("Failed to login.");
             System.out.println(e.getMessage());
         }
 
