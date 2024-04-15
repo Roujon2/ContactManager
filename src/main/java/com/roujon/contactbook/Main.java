@@ -100,6 +100,7 @@ public class Main {
             System.out.println("3. Search contact");
             System.out.println("4. Delete contact");
             System.out.println("5. Exit");
+            System.out.println("6. Delete User");
             System.out.println("Enter your choice: ");
 
             // Read user input
@@ -147,6 +148,22 @@ public class Main {
                 case 3:
                     // Search contact
                     System.out.println("\nSearch Contact\n");
+                    System.out.print("Enter contact first name: ");
+                    String searchFirstName = scanner.nextLine();
+                    System.out.print("Enter contact last name: ");
+                    String searchLastName = scanner.nextLine();
+                    System.out.println();
+
+                    // Search the contact
+                    List<Contact> searchContacts = db.searchContacts(user, searchFirstName, searchLastName);
+
+                    if(searchContacts.size() > 0){
+                        for(Contact c : searchContacts){
+                            System.out.println(c);
+                        }
+                    } else {
+                        System.out.println("No contacts found");
+                    }
                     break;
 
                 case 4:
@@ -158,13 +175,50 @@ public class Main {
                     String contactLastName = scanner.nextLine();
 
                     // Search the contact
+                    List<Contact> deleteContacts = db.searchContacts(user, contactFirstName, contactLastName);
 
-                    //Boolean success = db.deleteContact(user, );
+                    // Get the first contact
+                    if(deleteContacts.size() > 0){
+                        Contact deleteContact = deleteContacts.get(0);
+                        System.out.println("Are you sure you want to delete the following contact? y/n");
+                        System.out.println();
+                        System.out.println(deleteContact);
+                        String confirm = scanner.nextLine();
+
+                        if(!confirm.equals("y")){
+                            System.out.println("Operation cancelled");
+                            break;
+                        }
+                        Boolean success = db.deleteContact(user, deleteContact);
+                        if(success){
+                            System.out.println("Contact deleted");
+                        }else{
+                            System.out.println("Failed to delete contact");
+                        }
+                    } else {
+                        System.out.println("No contacts found");
+                    }
 
                     break;
                 case 5:
                     // Exit
                     running = false;
+                    break;
+                case 6:
+                    System.out.println("WARNING: This will delete all user data and associated contacts. Are you sure you want to delete your account? y/n");
+                    String confirm = scanner.nextLine();
+
+                    if(confirm.equals("y")){
+                        Boolean success = db.deleteUser(user);
+                        if(success){
+                            System.out.println("User deleted");
+                            running = false;
+                        }else{
+                            System.out.println("Failed to delete user");
+                        }
+                    }else{
+                        System.out.println("Operation cancelled");
+                    }
                     break;
                 default:
                     System.out.println("Invalid choice");
