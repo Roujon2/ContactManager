@@ -120,6 +120,24 @@ public class DatabaseManager {
 
         return contacts;
     }
+    // Delete contact
+    public Boolean deleteContact(User user, Contact contact) {
+        try {
+            Statement stmt = connection.createStatement();
+
+            // Delete the contact from the database
+            String deleteSql = "DELETE FROM contacts WHERE first_name = " + contact.getFirstName() + " AND last_name = " + contact.getLastName() + " AND user_id = " + user.getId() + ";";
+            
+            stmt.executeUpdate(deleteSql);  
+
+            return true;
+
+        } catch (SQLException e) {
+            System.err.println("Failed to delete contact");
+            System.out.println(e.getMessage());
+            return false;
+        }
+    }
 
 
     // User table features
@@ -164,10 +182,10 @@ public class DatabaseManager {
             success = true;
 
         } catch (SQLException e) {
-            System.err.println("Failed to register user");
-            System.out.println(e.getMessage());
+            System.err.println("\nFailed to register user");
+
             // Check if the username is already taken
-            if(e.getErrorCode() == 1062){
+            if(e.getErrorCode() == 19){
                 System.err.println("Username already taken");
             }
         }

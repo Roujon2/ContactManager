@@ -13,22 +13,25 @@ public class Main {
         // Create database manager
         DatabaseManager dbManager = new DatabaseManager(DB_URL);
 
+        // Scanner for input
+        Scanner scanner = new Scanner(System.in);
+
         // Main menu
-        User user = mainMenu(dbManager);
+        User user = mainMenu(dbManager, scanner);
 
         if(user != null){
             // Contact book menu
-            contactBookMenu(dbManager, user);
+            contactBookMenu(dbManager, user, scanner);
         }
 
+        // Close scanner
+        scanner.close();
     }
 
     
-    public static User mainMenu(DatabaseManager dbManager) {
+    public static User mainMenu(DatabaseManager dbManager, Scanner scanner) {
         // User to determine login
         User user = null;
-
-        Scanner scanner = new Scanner(System.in);
 
         // Display menu
         System.out.println("\nWelcome to Contact Manager!\n");
@@ -86,8 +89,7 @@ public class Main {
     }
 
     // Contact book menu
-    public static void contactBookMenu(DatabaseManager db, User user){
-        Scanner scanner = new Scanner(System.in);
+    public static void contactBookMenu(DatabaseManager db, User user, Scanner scanner){
 
         Boolean running = true;
 
@@ -150,6 +152,14 @@ public class Main {
                 case 4:
                     // Delete contact
                     System.out.println("\nDelete Contact\n");
+                    System.out.print("Enter contact first name: ");
+                    String contactFirstName = scanner.nextLine();
+                    System.out.print("Enter contact last name: ");
+                    String contactLastName = scanner.nextLine();
+
+                    // Search the contact
+
+                    //Boolean success = db.deleteContact(user, );
 
                     break;
                 case 5:
@@ -160,8 +170,6 @@ public class Main {
                     System.out.println("Invalid choice");
             }
         }
-        
-        scanner.close();
     }
 
 }
